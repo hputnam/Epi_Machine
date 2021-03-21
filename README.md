@@ -1,1 +1,1 @@
-# Epi_Machine
+# Comparing epigenetic machinery between complex and robust coral clades
