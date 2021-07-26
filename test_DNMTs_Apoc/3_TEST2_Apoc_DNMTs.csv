@@ -1,0 +1,4 @@
+qseqid, sacc, sscinames, stitle pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore,
+Dnmt1201|Apoc36906_c0_g1_i1,XP_020612302,N/A,DNA (cytosine-5)-methyltransferase 1-like [Orbicella faveolata],91.227,1288,111,2,1,1287,290,1576,0,2421
+Dnmt3a201|Apoc21574_c0_g1_i1,RMX42398,N/A,hypothetical protein pdam_00004868 [Pocillopora damicornis],100,59,0,0,1,59,1289,1347,3.73E-39,137
+Dnmt3b201|Apoc21574_c0_g1_i1,RMX42398,N/A,hypothetical protein pdam_00004868 [Pocillopora damicornis],100,59,0,0,1,59,1288,1346,2.32E-39,138
