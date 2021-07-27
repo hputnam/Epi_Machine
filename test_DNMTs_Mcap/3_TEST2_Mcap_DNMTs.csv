@@ -1,0 +1,5 @@
+qseqid, sacc, sscinames, stitle, pident, length, mismatch, gapopen, qstart, qend, sstart, send, evalue, bitscore
+Dnmt1201|gb|g53952|,XP_029197815,N/A,DNA (cytosine-5)-methyltransferase 1-like [Acropora millepora],87.064,1291,156,4,1,1287,279,1562,0,2284
+Dnmt3a201|gb|g25804|,XP_015756999,N/A,PREDICTED: DNA (cytosine-5)-methyltransferase 3A-like [Acropora digitifera],84.234,666,97,4,4,663,55,718,0,1152
+Dnmt3b201|gb|g25804|,XP_015756999,N/A,PREDICTED: DNA (cytosine-5)-methyltransferase 3A-like [Acropora digitifera],84.258,667,97,4,5,665,55,719,0,1155
+Dnmt3l201|gb|g25804|,XP_029213858,N/A,DNA (cytosine-5)-methyltransferase 3A-like [Acropora millepora],89.181,342,37,0,1,342,267,608,0,647
