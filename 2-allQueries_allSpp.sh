@@ -49,6 +49,7 @@ for Qry in "${!Qrys[@]}"; do
 			rm queries/"${Spp[Sp]}"_blastn_query.NOTfasta
 		done < "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_blastn.tsv
 	done
+	echo "all ${Qrys[Qry]} combos complete! $(date)"
 done
 
 echo "Combining results $(date)"
