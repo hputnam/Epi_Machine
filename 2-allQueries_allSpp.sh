@@ -41,7 +41,7 @@ for Sp in "${!Spp[@]}"; do
 		blast_formatter -archive "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".asn -max_target_seqs 1 -outfmt "6 qseqid sseqid sseq" -out "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".NOTfasta 
 		awk 'BEGIN { OFS = "\n" } { print ">"$1"|"$2, $3 }' "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".NOTfasta > "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}"_p.fasta
 		rm "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".NOTfasta
-		blast_formatter -archive "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".asn -max_target_seqs 1 -outfmt "6 qseqid sstart send sseqid" -out "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}"_blastn.tsv
+		blast_formatter -archive "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".asn -max_target_seqs 1 -outfmt "6 qseqid sstart send sseqid" -out "$resDir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_blastn.tsv
 		while read -r QUERY START STOP SUBJECT; do 
 			echo "Extracting $QUERY for  $SUBJECT $(date)"
 			blastdbcmd -entry "$SUBJECT" -db db/"${Spp[Sp]}"/"${Spp[Sp]}" -target_only -range "$START"-"$STOP" >> queries/"${Spp[Sp]}"_blastn_query.NOTfasta 
