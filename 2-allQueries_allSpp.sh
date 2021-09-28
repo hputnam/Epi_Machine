@@ -15,14 +15,14 @@ module load all/BLAST+/2.10.1-gompi-2020a #BLAST+
 module list
 
 echo -e "Creating array of Species Spp and setting variable resDir to easily place results in the directory blast_res/test_res" 
-mapfile -t Spp <species #Make a string of queries for the query variable
+mapfile -t Qrys <query #Make a string of queries for the query variable
 resDir="blast_res" #CHANGE THIS TO WHEREEVER YOU WANT THE RESULTS TO LIVE
 
 echo "Showing loop combinations $(date)"
 
-for Sp in "${!Spp[@]}"; do
-        mapfile -t Qrys <query
-        for Qry in "${!Qrys[@]}"; do
+for Qry in "${!Qrys[@]}"; do
+        mapfile -t Spp <species
+        for Sp in "${!Spp[@]}"; do
                 printf '%s  %s\n' "${Spp[Sp]}" "${Qrys[Qry]}"
         done
 done
@@ -30,9 +30,9 @@ done
 echo "Running tblastn of query "${Qrys[Qry]}" against all species databases. \
 Output will inlcude nucleotide and protein fasta files and an alignment report for each combination $(date)"
 
-for Sp in "${!Spp[@]}"; do
-	mapfile -t Qrys <query
-	for Qry in "${!Qrys[@]}"; do
+for Qry in "${!Qrys[@]}"; do
+	mapfile -t Spp <species
+	for Sp in "${!Spp[@]}"; do
 		echo -e "Now conducting local alignments of protein queries to ${Spp[Sp]} nucleotides with tblastn. $(date)"
 		tblastn -query queries/"${Qrys[Qry]}" -db db/"${Spp[Sp]}"/"${Spp[Sp]}" \
 			-outfmt 11 -evalue 1e-05 -out "$resDir"/"${Spp[Sp]}"_"${Qrys[Qry]}".asn
@@ -52,7 +52,6 @@ for Sp in "${!Spp[@]}"; do
 done
 
 echo "Combining results $(date)"
-mapfile -t Qrys <query
 for Qry in "${!Qrys[@]}"; do
 	cat "$resDir"/"${Qrys[Qry]}"/*_"${Qrys[Qry]}"_n.fasta > "$resDir"/"${Qrys[Qry]}"_allspp.nucl.fasta
 	cat "$resDir"/"${Qrys[Qry]}"/*_"${Qrys[Qry]}"_p.fasta > "$resDir"/"${Qrys[Qry]}"_allspp.prot.fasta
@@ -65,9 +64,9 @@ done
 echo -e "\n Now running a blastp search of all queries against the nr database with the output of the tblastn search  \
 Output will inlcude a protein fasta file and an alignment report for each combination $(date)"
 
-for Sp in "${!Spp[@]}"; do
-	mapfile -t Qrys <query
-	for Qry in "${!Qrys[@]}"; do
+for Qry in "${!Qrys[@]}"; do
+	mapfile -t Spp <species
+	for Sp in "${!Spp[@]}"; do
 		echo "Running blastp on ${Spp[Sp]} versus nr database $(date)"
 		mv "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_p.fasta "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"1.fasta
 		sed -e 's/-//g' "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"1.fasta > "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_p.fasta
