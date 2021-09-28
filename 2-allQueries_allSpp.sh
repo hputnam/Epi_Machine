@@ -46,7 +46,7 @@ for Sp in "${!Spp[@]}"; do
 			echo "Extracting $QUERY for  $SUBJECT $(date)"
 			blastdbcmd -entry "$SUBJECT" -db db/"${Spp[Sp]}"/"${Spp[Sp]}" -target_only -range "$START"-"$STOP" >> queries/"${Spp[Sp]}"_blastn_query.NOTfasta 
 			sed "s/>/>$QUERY|${Spp[Sp]}/g" queries/"${Spp[Sp]}"_blastn_query.NOTfasta >> "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_n.fasta
-			rm queries/$"${Spp[Sp]}"_blastn_query.NOTfasta
+			rm queries/"${Spp[Sp]}"_blastn_query.NOTfasta
 		done < "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_blastn.tsv
 	done
 done
