@@ -61,3 +61,5 @@ done
 
 cat "$resDir"/*_DNMTs_nr_hits.csv > allspp_nr_hits.csv
 echo "TEST COMPLETE!" $(date)
+
+
