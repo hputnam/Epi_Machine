@@ -79,7 +79,7 @@ nano /data/putnamlab/erin_chille/Fellous_Epi_Machinery/scripts/BUSCO.sh
 #SBATCH --nodes=1 --ntasks-per-node=20
 #SBATCH --exclusive
 #SBATCH -D /data/putnamlab/erin_chille/Fellous_Epi_Machinery/ref
-#SBATCH --mem=100GB
+#SBATCH --mem=50GB
 #SBATCH -q putnamlab
 
 echo "Starting BUSCO" $(date)
@@ -129,7 +129,7 @@ module load BUSCO/4.1.4-foss-2019b-Python-3.7.4
 
 #run BUSCO
 
-for i in "Ahya" "Amil" "Mcap" "Plut" "Prus" "Apoc" "Gasp" "Gfas" "Pver" "Pdam" "Spis" "Nvec" "Apal" "Mlei" "Pbac" "Aque" "Emue"; do
+for i in "Adig" "Ahya" "Amil" "Mcap" "Plut" "Prus" "Apoc" "Gasp" "Gfas" "Pver" "Pdam" "Spis" "Nvec" "Apal" "Mlei" "Pbac" "Aque" "Emue"; do
 busco --config config.ini -m transcriptome -i ${i}.fasta -o ${i}_BUSCO -l /data/putnamlab/erin_chille/Fellous_Epi_Machinery/ref/busco_downloads/metazoa_odb10 --offline
 done
 ```
