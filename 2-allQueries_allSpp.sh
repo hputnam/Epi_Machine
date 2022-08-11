@@ -81,6 +81,7 @@ for Qry in "${!Qrys[@]}"; do
 		awk 'BEGIN { OFS = "\n" } { print ">"$1"|"$2, $3 }' "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_nr_hits.NOTfasta > "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_nr_hits.fasta
 		rm "$resdir"/"${Qrys[Qry]}"/"${Spp[Sp]}"_"${Qrys[Qry]}"_nr_hits.NOTfasta
 	done
+	echo "all ${Qrys[Qry]} combos complete! $(date)"
 done
 
 echo "Combining results $(date)"
