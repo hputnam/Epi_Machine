@@ -1,0 +1,358 @@
+---
+title: "BLAST Workflow Epi Machine"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+header=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart", "qend", "sstart", "send", "evalue", "bitscore")
+```
+
+
+## 1. Index genomes
+
+## 2. Run tblastn to obtain closest hits of proteins of interest in our reference genomes.
+
+## 3. Sort hits by length and bitscore
+
+###  a. Read in alignment reports
+
+DNMTs
+```{r}
+DNMTs <- read.csv(file = "230109_alignment_reports/DNMTs_allspp_alignment_report.csv", col.names = header)
+DNMTs$spp <- str_split(DNMTs$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+DNMTs$group <- paste(DNMTs$qseqid, DNMTs$spp, sep = "_")
+head(DNMTs)
+DNMTs_top3_bitscore <- DNMTs %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(DNMTs_top3_bitscore)
+DNMTs_top <- DNMTs_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(DNMTs_top)
+#DNMTs <- filter(DNMTs,bitscore<60)
+n_distinct(DNMTs$qseqid)*n_distinct(DNMTs$spp)
+write_delim(DNMTs_top, file = "230112_alignment_reports_filtered/DNMTs_allspp_alignment_report_top.csv", delim = ",")
+
+
+DNMTs_retrieve <- data.frame(QUERY=paste(">",DNMTs_top$qseqid,"_",DNMTs_top$sseqid, sep = ""), START=DNMTs_top$sstart, STOP=DNMTs_top$send, SUBJECT=DNMTs_top$sseqid)
+write_delim(DNMTs_retrieve, file = "230112_not_fasta/DNMTs_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+DUE
+```{r}
+DUE <- read.csv(file = "230109_alignment_reports/DUE_allspp_alignment_report.csv", col.names = header)
+DUE$spp <- str_split(DUE$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+DUE$group <- paste(DUE$qseqid, DUE$spp, sep = "_")
+head(DUE)
+DUE_top3_bitscore <- DUE %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(DUE_top3_bitscore)
+DUE_top <- DUE_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(DUE_top)
+#DUE <- filter(DUE,bitscore<60)
+n_distinct(DUE$qseqid)*n_distinct(DUE$spp)
+write_delim(DUE_top, file = "230112_alignment_reports_filtered/DUE_allspp_alignment_report_top.csv", delim = ",")
+
+
+DUE_retrieve <- data.frame(QUERY=paste(">",DUE_top$qseqid,"_",DUE_top$sseqid, sep = ""), START=DUE_top$sstart, STOP=DUE_top$send, SUBJECT=DUE_top$sseqid)
+write_delim(DUE_retrieve, file = "230112_not_fasta/DUE_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+H1
+```{r}
+
+H1 <- read.csv(file = "230109_alignment_reports/H1_allspp_alignment_report.csv", col.names = header)
+H1$spp <- str_split(H1$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+H1$group <- paste(H1$qseqid, H1$spp, sep = "_")
+head(H1)
+H1_top3_bitscore <- H1 %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(H1_top3_bitscore)
+H1_top <- H1_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(H1_top)
+#H1 <- filter(H1,bitscore<60)
+n_distinct(H1$qseqid)*n_distinct(H1$spp)
+write_delim(H1_top, file = "230112_alignment_reports_filtered/H1_allspp_alignment_report_top.csv", delim = ",")
+
+
+H1_retrieve <- data.frame(QUERY=paste(">",H1_top$qseqid,"_",H1_top$sseqid, sep = ""), START=H1_top$sstart, STOP=H1_top$send, SUBJECT=H1_top$sseqid)
+write_delim(H1_retrieve, file = "230112_not_fasta/H1_allspp_alignment_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+H2A
+```{r}
+H2A <- read.csv(file = "230109_alignment_reports/H2A_allspp_alignment_report.csv", col.names = header)
+H2A$spp <- str_split(H2A$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+H2A$group <- paste(H2A$qseqid, H2A$spp, sep = "_")
+head(H2A)
+H2A_top3_bitscore <- H2A %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(H2A_top3_bitscore)
+H2A_top <- H2A_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(H2A_top)
+#H2A <- filter(H2A,bitscore<60)
+n_distinct(H2A$qseqid)*n_distinct(H2A$spp)
+write_delim(H2A_top, file = "230112_alignment_reports_filtered/H2A_allspp_alignment_report_top.csv", delim = ",")
+
+
+H2A_retrieve <- data.frame(QUERY=paste(">",H2A_top$qseqid,"_",H2A_top$sseqid, sep = ""), START=H2A_top$sstart, STOP=H2A_top$send, SUBJECT=H2A_top$sseqid)
+write_delim(H2A_retrieve, file = "230112_not_fasta/H2A_allspp_alignment_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+HDAC_Sirt
+```{r}
+HDAC_Sirt <- read.csv(file = "230109_alignment_reports/HDAC_Sirt_allspp_alignment_report.csv", col.names = header)
+HDAC_Sirt$spp <- str_split(HDAC_Sirt$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+HDAC_Sirt$group <- paste(HDAC_Sirt$qseqid, HDAC_Sirt$spp, sep = "_")
+head(HDAC_Sirt)
+HDAC_Sirt_top3_bitscore <- HDAC_Sirt %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(HDAC_Sirt_top3_bitscore)
+HDAC_Sirt_top <- HDAC_Sirt_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(HDAC_Sirt_top)
+#HDAC_Sirt <- filter(HDAC_Sirt,bitscore<60)
+n_distinct(HDAC_Sirt$qseqid)*n_distinct(HDAC_Sirt$spp)
+write_delim(HDAC_Sirt_top, file = "230112_alignment_reports_filtered/HDAC_Sirt_allspp_alignment_report_top.csv", delim = ",")
+
+
+HDAC_Sirt_retrieve <- data.frame(QUERY=paste(">",HDAC_Sirt_top$qseqid,"_",HDAC_Sirt_top$sseqid, sep = ""), START=HDAC_Sirt_top$sstart, STOP=HDAC_Sirt_top$send, SUBJECT=HDAC_Sirt_top$sseqid)
+write_delim(HDAC_Sirt_retrieve, file = "230112_not_fasta/HDAC_Sirt_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Histone_Glycosylation
+```{r}
+Histone_Glycosylation <- read.csv(file = "230109_alignment_reports/Histone_Glycosylation_allspp_alignment_report.csv", col.names = header)
+Histone_Glycosylation$spp <- str_split(Histone_Glycosylation$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Histone_Glycosylation$group <- paste(Histone_Glycosylation$qseqid, Histone_Glycosylation$spp, sep = "_")
+head(Histone_Glycosylation)
+Histone_Glycosylation_top3_bitscore <- Histone_Glycosylation %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Histone_Glycosylation_top3_bitscore)
+Histone_Glycosylation_top <- Histone_Glycosylation_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Histone_Glycosylation_top)
+#Histone_Glycosylation <- filter(Histone_Glycosylation,bitscore<60)
+n_distinct(Histone_Glycosylation$qseqid)*n_distinct(Histone_Glycosylation$spp)
+write_delim(Histone_Glycosylation_top, file = "230112_alignment_reports_filtered/Histone_Glycosylation_allspp_alignment_report_top.csv", delim = ",")
+
+
+Histone_Glycosylation_retrieve <- data.frame(QUERY=paste(">",Histone_Glycosylation_top$qseqid,"_",Histone_Glycosylation_top$sseqid, sep = ""), START=Histone_Glycosylation_top$sstart, STOP=Histone_Glycosylation_top$send, SUBJECT=Histone_Glycosylation_top$sseqid)
+write_delim(Histone_Glycosylation_retrieve, file = "230112_not_fasta/Histone_Glycosylation_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Histone_Poly_ADP_Ribosylation
+```{r}
+Histone_Poly_ADP_Ribosylation <- read.csv(file = "230109_alignment_reports/Histone_Poly_ADP_Ribosylation_allspp_alignment_report.csv", col.names = header)
+Histone_Poly_ADP_Ribosylation$spp <- str_split(Histone_Poly_ADP_Ribosylation$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Histone_Poly_ADP_Ribosylation$group <- paste(Histone_Poly_ADP_Ribosylation$qseqid, Histone_Poly_ADP_Ribosylation$spp, sep = "_")
+head(Histone_Poly_ADP_Ribosylation)
+Histone_Poly_ADP_Ribosylation_top3_bitscore <- Histone_Poly_ADP_Ribosylation %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Histone_Poly_ADP_Ribosylation_top3_bitscore)
+Histone_Poly_ADP_Ribosylation_top <- Histone_Poly_ADP_Ribosylation_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Histone_Poly_ADP_Ribosylation_top)
+#Histone_Poly_ADP_Ribosylation <- filter(Histone_Poly_ADP_Ribosylation,bitscore<60)
+n_distinct(Histone_Poly_ADP_Ribosylation$qseqid)*n_distinct(Histone_Poly_ADP_Ribosylation$spp)
+write_delim(Histone_Poly_ADP_Ribosylation_top, file = "230112_alignment_reports_filtered/Histone_Poly_ADP_Ribosylation_allspp_alignment_report_top.csv", delim = ",")
+
+
+Histone_Poly_ADP_Ribosylation_retrieve <- data.frame(QUERY=paste(">",Histone_Poly_ADP_Ribosylation_top$qseqid,"_",Histone_Poly_ADP_Ribosylation_top$sseqid, sep = ""), START=Histone_Poly_ADP_Ribosylation_top$sstart, STOP=Histone_Poly_ADP_Ribosylation_top$send, SUBJECT=Histone_Poly_ADP_Ribosylation_top$sseqid)
+write_delim(Histone_Poly_ADP_Ribosylation_retrieve, file = "230112_not_fasta/Histone_Poly_ADP_Ribosylation_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+KATs
+```{r}
+KATs <- read.csv(file = "230109_alignment_reports/KATs_allspp_alignment_report.csv", col.names = header)
+KATs$spp <- str_split(KATs$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+KATs$group <- paste(KATs$qseqid, KATs$spp, sep = "_")
+head(KATs)
+KATs_top3_bitscore <- KATs %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(KATs_top3_bitscore)
+KATs_top <- KATs_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(KATs_top)
+#KATs <- filter(KATs,bitscore<60)
+n_distinct(KATs$qseqid)*n_distinct(KATs$spp)
+write_delim(KATs_top, file = "230112_alignment_reports_filtered/KATs_allspp_alignment_report_top.csv", delim = ",")
+
+
+KATs_retrieve <- data.frame(QUERY=paste(">",KATs_top$qseqid,"_",KATs_top$sseqid, sep = ""), START=KATs_top$sstart, STOP=KATs_top$send, SUBJECT=KATs_top$sseqid)
+write_delim(KATs_retrieve, file = "230112_not_fasta/KATs_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Kdm
+```{r}
+Kdm <- read.csv(file = "230109_alignment_reports/Kdm_allspp_alignment_report.csv", col.names = header)
+Kdm$spp <- str_split(Kdm$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Kdm$group <- paste(Kdm$qseqid, Kdm$spp, sep = "_")
+head(Kdm)
+Kdm_top3_bitscore <- Kdm %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Kdm_top3_bitscore)
+Kdm_top <- Kdm_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Kdm_top)
+#Kdm <- filter(Kdm,bitscore<60)
+n_distinct(Kdm$qseqid)*n_distinct(Kdm$spp)
+write_delim(Kdm_top, file = "230112_alignment_reports_filtered/Kdm_allspp_alignment_report_top.csv", delim = ",")
+
+
+Kdm_retrieve <- data.frame(QUERY=paste(">",Kdm_top$qseqid,"_",Kdm_top$sseqid, sep = ""), START=Kdm_top$sstart, STOP=Kdm_top$send, SUBJECT=Kdm_top$sseqid)
+write_delim(Kdm_retrieve, file = "230112_not_fasta/Kdm_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Kinases
+```{r}
+Kinases <- read.csv(file = "230109_alignment_reports/Kinases_allspp_alignment_report.csv", col.names = header)
+Kinases$spp <- str_split(Kinases$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Kinases$group <- paste(Kinases$qseqid, Kinases$spp, sep = "_")
+head(Kinases)
+Kinases_top3_bitscore <- Kinases %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Kinases_top3_bitscore)
+Kinases_top <- Kinases_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Kinases_top)
+#Kinases <- filter(Kinases,bitscore<60)
+n_distinct(Kinases$qseqid)*n_distinct(Kinases$spp)
+write_delim(Kinases_top, file = "230112_alignment_reports_filtered/Kinases_allspp_alignment_report_top.csv", delim = ",")
+
+
+Kinases_retrieve <- data.frame(QUERY=paste(">",Kinases_top$qseqid,"_",Kinases_top$sseqid, sep = ""), START=Kinases_top$sstart, STOP=Kinases_top$send, SUBJECT=Kinases_top$sseqid)
+write_delim(Kinases_retrieve, file = "230112_not_fasta/Kinases_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+KMTs
+```{r}
+KMTs <- read.csv(file = "230109_alignment_reports/KMTs_allspp_alignment_report.csv", col.names = header)
+KMTs$spp <- str_split(KMTs$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+KMTs$group <- paste(KMTs$qseqid, KMTs$spp, sep = "_")
+head(KMTs)
+KMTs_top3_bitscore <- KMTs %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(KMTs_top3_bitscore)
+KMTs_top <- KMTs_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(KMTs_top)
+#KMTs <- filter(KMTs,bitscore<60)
+n_distinct(KMTs$qseqid)*n_distinct(KMTs$spp)
+write_delim(KMTs_top, file = "230112_alignment_reports_filtered/KMTs_allspp_alignment_report_top.csv", delim = ",")
+
+
+KMTs_retrieve <- data.frame(QUERY=paste(">",KMTs_top$qseqid,"_",KMTs_top$sseqid, sep = ""), START=KMTs_top$sstart, STOP=KMTs_top$send, SUBJECT=KMTs_top$sseqid)
+write_delim(KMTs_retrieve, file = "230112_not_fasta/KMTs_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Mbd1
+```{r}
+Mbd1 <- read.csv(file = "230109_alignment_reports/Mbd1_allspp_alignment_report.csv", col.names = header)
+Mbd1$spp <- str_split(Mbd1$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Mbd1$group <- paste(Mbd1$qseqid, Mbd1$spp, sep = "_")
+head(Mbd1)
+Mbd1_top3_bitscore <- Mbd1 %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Mbd1_top3_bitscore)
+Mbd1_top <- Mbd1_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Mbd1_top)
+#Mbd1 <- filter(Mbd1,bitscore<60)
+n_distinct(Mbd1$qseqid)*n_distinct(Mbd1$spp)
+write_delim(Mbd1_top, file = "230112_alignment_reports_filtered/Mbd1_allspp_alignment_report_top.csv", delim = ",")
+
+
+Mbd1_retrieve <- data.frame(QUERY=paste(">",Mbd1_top$qseqid,"_",Mbd1_top$sseqid, sep = ""), START=Mbd1_top$sstart, STOP=Mbd1_top$send, SUBJECT=Mbd1_top$sseqid)
+write_delim(Mbd1_retrieve, file = "230112_not_fasta/Mbd1_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Methyl_binding_proteins
+```{r}
+Methyl_binding_proteins <- read.csv(file = "230109_alignment_reports/Methyl_binding_proteins_allspp_alignment_report.csv", col.names = header)
+Methyl_binding_proteins$spp <- str_split(Methyl_binding_proteins$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Methyl_binding_proteins$group <- paste(Methyl_binding_proteins$qseqid, Methyl_binding_proteins$spp, sep = "_")
+head(Methyl_binding_proteins)
+Methyl_binding_proteins_top3_bitscore <- Methyl_binding_proteins %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Methyl_binding_proteins_top3_bitscore)
+Methyl_binding_proteins_top <- Methyl_binding_proteins_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Methyl_binding_proteins_top)
+#Methyl_binding_proteins <- filter(Methyl_binding_proteins,bitscore<60)
+n_distinct(Methyl_binding_proteins$qseqid)*n_distinct(Methyl_binding_proteins$spp)
+write_delim(Methyl_binding_proteins_top, file = "230112_alignment_reports_filtered/Methyl_binding_proteins_allspp_alignment_report_top.csv", delim = ",")
+
+
+Methyl_binding_proteins_retrieve <- data.frame(QUERY=paste(">",Methyl_binding_proteins_top$qseqid,"_",Methyl_binding_proteins_top$sseqid, sep = ""), START=Methyl_binding_proteins_top$sstart, STOP=Methyl_binding_proteins_top$send, SUBJECT=Methyl_binding_proteins_top$sseqid)
+write_delim(Methyl_binding_proteins_retrieve, file = "230112_not_fasta/Methyl_binding_proteins_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Phosphatases
+```{r}
+Phosphatases <- read.csv(file = "230109_alignment_reports/Phosphatases_allspp_alignment_report.csv", col.names = header)
+Phosphatases$spp <- str_split(Phosphatases$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Phosphatases$group <- paste(Phosphatases$qseqid, Phosphatases$spp, sep = "_")
+head(Phosphatases)
+Phosphatases_top3_bitscore <- Phosphatases %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Phosphatases_top3_bitscore)
+Phosphatases_top <- Phosphatases_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Phosphatases_top)
+#Phosphatases <- filter(Phosphatases,bitscore<60)
+n_distinct(Phosphatases$qseqid)*n_distinct(Phosphatases$spp)
+write_delim(Phosphatases_top, file = "230112_alignment_reports_filtered/Phosphatases_allspp_alignment_report_top.csv", delim = ",")
+
+
+Phosphatases_retrieve <- data.frame(QUERY=paste(">",Phosphatases_top$qseqid,"_",Phosphatases_top$sseqid, sep = ""), START=Phosphatases_top$sstart, STOP=Phosphatases_top$send, SUBJECT=Phosphatases_top$sseqid)
+write_delim(Phosphatases_retrieve, file = "230112_not_fasta/Phosphatases_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Prmt
+```{r}
+Prmt <- read.csv(file = "230109_alignment_reports/Prmt_allspp_alignment_report.csv", col.names = header)
+Prmt$spp <- str_split(Prmt$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Prmt$group <- paste(Prmt$qseqid, Prmt$spp, sep = "_")
+head(Prmt)
+Prmt_top3_bitscore <- Prmt %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Prmt_top3_bitscore)
+Prmt_top <- Prmt_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Prmt_top)
+#Prmt <- filter(Prmt,bitscore<60)
+n_distinct(Prmt$qseqid)*n_distinct(Prmt$spp)
+write_delim(Prmt_top, file = "230112_alignment_reports_filtered/Prmt_allspp_alignment_report_top.csv", delim = ",")
+
+
+Prmt_retrieve <- data.frame(QUERY=paste(">",Prmt_top$qseqid,"_",Prmt_top$sseqid, sep = ""), START=Prmt_top$sstart, STOP=Prmt_top$send, SUBJECT=Prmt_top$sseqid)
+write_delim(Prmt_retrieve, file = "230112_not_fasta/Prmt_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Regulatory_subunits_PP1
+```{r}
+Regulatory_subunits_PP1 <- read.csv(file = "230109_alignment_reports/Regulatory_subunits_PP1_allspp_alignment_report.csv", col.names = header)
+Regulatory_subunits_PP1$spp <- str_split(Regulatory_subunits_PP1$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Regulatory_subunits_PP1$group <- paste(Regulatory_subunits_PP1$qseqid, Regulatory_subunits_PP1$spp, sep = "_")
+head(Regulatory_subunits_PP1)
+Regulatory_subunits_PP1_top3_bitscore <- Regulatory_subunits_PP1 %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Regulatory_subunits_PP1_top3_bitscore)
+Regulatory_subunits_PP1_top <- Regulatory_subunits_PP1_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Regulatory_subunits_PP1_top)
+#Regulatory_subunits_PP1 <- filter(Regulatory_subunits_PP1,bitscore<60)
+n_distinct(Regulatory_subunits_PP1$qseqid)*n_distinct(Regulatory_subunits_PP1$spp)
+write_delim(Regulatory_subunits_PP1_top, file = "230112_alignment_reports_filtered/Regulatory_subunits_PP1_allspp_alignment_report_top.csv", delim = ",")
+
+
+Regulatory_subunits_PP1_retrieve <- data.frame(QUERY=paste(">",Regulatory_subunits_PP1_top$qseqid,"_",Regulatory_subunits_PP1_top$sseqid, sep = ""), START=Regulatory_subunits_PP1_top$sstart, STOP=Regulatory_subunits_PP1_top$send, SUBJECT=Regulatory_subunits_PP1_top$sseqid)
+write_delim(Regulatory_subunits_PP1_retrieve, file = "230112_not_fasta/Regulatory_subunits_PP1_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+RNA_Machinery_Homo_sapiens
+```{r}
+RNA_Machinery_Homo_sapiens <- read.csv(file = "230109_alignment_reports/RNA_Machinery_Homo_sapiens_allspp_alignment_report.csv", col.names = header)
+RNA_Machinery_Homo_sapiens$spp <- str_split(RNA_Machinery_Homo_sapiens$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+RNA_Machinery_Homo_sapiens$group <- paste(RNA_Machinery_Homo_sapiens$qseqid, RNA_Machinery_Homo_sapiens$spp, sep = "_")
+head(RNA_Machinery_Homo_sapiens)
+RNA_Machinery_Homo_sapiens_top3_bitscore <- RNA_Machinery_Homo_sapiens %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(RNA_Machinery_Homo_sapiens_top3_bitscore)
+RNA_Machinery_Homo_sapiens_top <- RNA_Machinery_Homo_sapiens_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(RNA_Machinery_Homo_sapiens_top)
+#RNA_Machinery_Homo_sapiens <- filter(RNA_Machinery_Homo_sapiens,bitscore<60)
+n_distinct(RNA_Machinery_Homo_sapiens$qseqid)*n_distinct(RNA_Machinery_Homo_sapiens$spp)
+write_delim(RNA_Machinery_Homo_sapiens_top, file = "230112_alignment_reports_filtered/RNA_Machinery_Homo_sapiens_allspp_alignment_report_top.csv", delim = ",")
+
+
+RNA_Machinery_Homo_sapiens_retrieve <- data.frame(QUERY=paste(">",RNA_Machinery_Homo_sapiens_top$qseqid,"_",RNA_Machinery_Homo_sapiens_top$sseqid, sep = ""), START=RNA_Machinery_Homo_sapiens_top$sstart, STOP=RNA_Machinery_Homo_sapiens_top$send, SUBJECT=RNA_Machinery_Homo_sapiens_top$sseqid)
+write_delim(RNA_Machinery_Homo_sapiens_retrieve, file = "230112_not_fasta/RNA_Machinery_Homo_sapiens_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+SUMO_SENP
+```{r}
+SUMO_SENP <- read.csv(file = "230109_alignment_reports/SUMO_SENP_allspp_alignment_report.csv", col.names = header)
+SUMO_SENP$spp <- str_split(SUMO_SENP$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+SUMO_SENP$group <- paste(SUMO_SENP$qseqid, SUMO_SENP$spp, sep = "_")
+head(SUMO_SENP)
+SUMO_SENP_top3_bitscore <- SUMO_SENP %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(SUMO_SENP_top3_bitscore)
+SUMO_SENP_top <- SUMO_SENP_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(SUMO_SENP_top)
+#SUMO_SENP <- filter(SUMO_SENP,bitscore<60)
+n_distinct(SUMO_SENP$qseqid)*n_distinct(SUMO_SENP$spp)
+write_delim(SUMO_SENP_top, file = "230112_alignment_reports_filtered/SUMO_SENP_allspp_alignment_report_top.csv", delim = ",")
+
+
+SUMO_SENP_retrieve <- data.frame(QUERY=paste(">",SUMO_SENP_top$qseqid,"_",SUMO_SENP_top$sseqid, sep = ""), START=SUMO_SENP_top$sstart, STOP=SUMO_SENP_top$send, SUBJECT=SUMO_SENP_top$sseqid)
+write_delim(SUMO_SENP_retrieve, file = "230112_not_fasta/SUMO_SENP_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+TDG
+```{r}
+TDG <- read.csv(file = "230109_alignment_reports/TDG_allspp_alignment_report.csv", col.names = header)
+TDG$spp <- str_split(TDG$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+TDG$group <- paste(TDG$qseqid, TDG$spp, sep = "_")
+head(TDG)
+TDG_top3_bitscore <- TDG %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(TDG_top3_bitscore)
+TDG_top <- TDG_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(TDG_top)
+#TDG <- filter(TDG,bitscore<60)
+n_distinct(TDG$qseqid)*n_distinct(TDG$spp)
+write_delim(TDG_top, file = "230112_alignment_reports_filtered/TDG_allspp_alignment_report_top.csv", delim = ",")
+
+
+TDG_retrieve <- data.frame(QUERY=paste(">",TDG_top$qseqid,"_",TDG_top$sseqid, sep = ""), START=TDG_top$sstart, STOP=TDG_top$send, SUBJECT=TDG_top$sseqid)
+write_delim(TDG_retrieve, file = "230112_not_fasta/TDG_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+TET
+```{r}
+TET <- read.csv(file = "230109_alignment_reports/TET_allspp_alignment_report.csv", col.names = header)
+TET$spp <- str_split(TET$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+TET$group <- paste(TET$qseqid, TET$spp, sep = "_")
+head(TET)
+TET_top3_bitscore <- TET %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(TET_top3_bitscore)
+TET_top <- TET_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(TET_top)
+#TET <- filter(TET,bitscore<60)
+n_distinct(TET$qseqid)*n_distinct(TET$spp)
+write_delim(TET_top, file = "230112_alignment_reports_filtered/TET_allspp_alignment_report_top.csv", delim = ",")
+
+
+TET_retrieve <- data.frame(QUERY=paste(">",TET_top$qseqid,"_",TET_top$sseqid, sep = ""), START=TET_top$sstart, STOP=TET_top$send, SUBJECT=TET_top$sseqid)
+write_delim(TET_retrieve, file = "230112_not_fasta/TET_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+Ube
+```{r}
+Ube <- read.csv(file = "230109_alignment_reports/Ube_allspp_alignment_report.csv", col.names = header)
+Ube$spp <- str_split(Ube$sseqid, "_",  n = 2, simplify = TRUE)[,1]
+Ube$group <- paste(Ube$qseqid, Ube$spp, sep = "_")
+head(Ube)
+Ube_top3_bitscore <- Ube %>% group_by(group) %>% slice_max(n = 3, order_by = bitscore); head(Ube_top3_bitscore)
+Ube_top <- Ube_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(Ube_top)
+#Ube <- filter(Ube,bitscore<60)
+n_distinct(Ube$qseqid)*n_distinct(Ube$spp)
+write_delim(Ube_top, file = "230112_alignment_reports_filtered/Ube_allspp_alignment_report_top.csv", delim = ",")
+
+
+
+Ube_retrieve <- data.frame(QUERY=paste(">",Ube_top$qseqid,"_",Ube_top$sseqid, sep = ""), START=Ube_top$sstart, STOP=Ube_top$send, SUBJECT=Ube_top$sseqid)
+write_delim(Ube_retrieve, file = "230112_not_fasta/Ube_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
