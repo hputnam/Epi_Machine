@@ -18,7 +18,7 @@ header=c("qseqid", "sseqid", "pident", "length", "mismatch", "gapopen", "qstart"
 
 ###  a. Read in alignment reports
 
-DNMTs
+#### DNMTs
 ```{r}
 DNMTs <- read.csv(file = "230109_alignment_reports/DNMTs_allspp_alignment_report.csv", col.names = header)
 DNMTs$spp <- str_split(DNMTs$sseqid, "_",  n = 2, simplify = TRUE)[,1]
@@ -28,12 +28,21 @@ DNMTs_top3_bitscore <- DNMTs %>% group_by(group) %>% slice_max(n = 3, order_by =
 DNMTs_top <- DNMTs_top3_bitscore %>% group_by(group) %>% slice_max(n = 1, order_by = length, with_ties = FALSE); head(DNMTs_top)
 #DNMTs <- filter(DNMTs,bitscore<60)
 n_distinct(DNMTs$qseqid)*n_distinct(DNMTs$spp)
-write_delim(DNMTs_top, file = "230112_alignment_reports_filtered/DNMTs_allspp_alignment_report_top.csv", delim = ",")
+# write_delim(DNMTs_top, file = "230112_alignment_reports_filtered/DNMTs_allspp_alignment_report_top.csv", delim = ",")
 
 
-DNMTs_retrieve <- data.frame(QUERY=paste(">",DNMTs_top$qseqid,"_",DNMTs_top$sseqid, sep = ""), START=DNMTs_top$sstart, STOP=DNMTs_top$send, SUBJECT=DNMTs_top$sseqid)
+DNMTs_retrieve <- data.frame(QUERY=DNMTs_top$qseqid, START=DNMTs_top$sstart, STOP=DNMTs_top$send, SUBJECT=DNMTs_top$sseqid, SPP=DNMTs_top$spp)
 write_delim(DNMTs_retrieve, file = "230112_not_fasta/DNMTs_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
 ```
+
+```{shell}
+while read -r QUERY START STOP SUBJECT SPP; do 
+        echo "Extracting $QUERY for  $SPP $(date)"
+        blastdbcmd -entry "$SUBJECT" -db db/"$SPP"/"$SPP" -target_only -range "$START"-"$STOP" >> blast_res/230118_fasta_files/DNMTs_"$QUERY"_"$SPP".rm
+        sed "s/>/>"$QUERY"_/g" blast_res/230118_fasta_files/DNMTs_"$QUERY"_"$SPP".rm >> blast_res/230118_fasta_files/DNMTs_allspp.fna
+        done < blast_res/230112_not_fasta/DNMTs_allspp_retrieve.tsv; rm *.rm
+```
+
 DUE
 ```{r}
 DUE <- read.csv(file = "230109_alignment_reports/DUE_allspp_alignment_report.csv", col.names = header)
@@ -47,8 +56,16 @@ n_distinct(DUE$qseqid)*n_distinct(DUE$spp)
 write_delim(DUE_top, file = "230112_alignment_reports_filtered/DUE_allspp_alignment_report_top.csv", delim = ",")
 
 
-DUE_retrieve <- data.frame(QUERY=paste(">",DUE_top$qseqid,"_",DUE_top$sseqid, sep = ""), START=DUE_top$sstart, STOP=DUE_top$send, SUBJECT=DUE_top$sseqid)
+DUE_retrieve <- data.frame(QUERY=DUE_top$qseqid, START=DUE_top$sstart, STOP=DUE_top$send, SUBJECT=DUE_top$sseqid, SPP=DUE_top$spp)
 write_delim(DUE_retrieve, file = "230112_not_fasta/DUE_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
+```
+
+```{shell}
+while read -r QUERY START STOP SUBJECT SPP; do 
+        echo "Extracting $QUERY for  $SPP $(date)"
+        blastdbcmd -entry "$SUBJECT" -db db/"$SPP"/"$SPP" -target_only -range "$START"-"$STOP" >> blast_res/230118_fasta_files/DUE_"$QUERY"_"$SPP".rm
+        sed "s/>/>"$QUERY"_/g" blast_res/230118_fasta_files/DUE_"$QUERY"_"$SPP".rm >> blast_res/230118_fasta_files/DUE_allspp.fna
+        done < blast_res/230112_not_fasta/DUE_allspp_retrieve.tsv; rm *.rm
 ```
 H1
 ```{r}
@@ -356,3 +373,16 @@ write_delim(Ube_top, file = "230112_alignment_reports_filtered/Ube_allspp_alignm
 Ube_retrieve <- data.frame(QUERY=paste(">",Ube_top$qseqid,"_",Ube_top$sseqid, sep = ""), START=Ube_top$sstart, STOP=Ube_top$send, SUBJECT=Ube_top$sseqid)
 write_delim(Ube_retrieve, file = "230112_not_fasta/Ube_allspp_retrieve.tsv", delim = "\t", col_names = FALSE)
 ```
+
+### Retrieve nucleotide sequences for each group
+```{shell}
+while read -r QUERY START STOP SUBJECT SPP; do 
+                        echo "Extracting $QUERY for  $SUBJECT $(date)"
+                        blastdbcmd -entry "$SUBJECT" -db db/"$SPP"/"$SPP" -target_only -range "$START"-"$STOP" >> queries/"$SPP"_blastn_query.fna 
+                        # sed "s/>/>$QUERY|${Spp[Sp]}/g" queries/"$SPP"_blastn_query.NOTfasta >> "$resdir"/"${Qrys[Qry]}"/"$SPP"_"${Qrys[Qry]}"_n.fasta
+                        rm queries/"$SPP"_blastn_query.NOTfasta
+                done < "$resdir"/230112_not_fasta/"${Qrys[Qry]}"_allspp_retrieve.tsv
+        done
+
+```
+

@@ -1,7 +1,0 @@
-mapfile -t query <query
-for q in "${!query[@]}"; do
-	mapfile -t Spp <species
-	for s in "${!Spp[@]}"; do
-		echo -e ""${query[q]}" "${Spp[s]}""
-	done
-done
